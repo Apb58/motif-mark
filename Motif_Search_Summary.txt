@@ -1,0 +1,31 @@
+## Summary of Motif Search:
+Gene: INSR
+	Motif: [CTct][Gg][Cc][CTct]
+	Number found: 11
+	Position(s) in sequence: [13, 30, 100, 221, 262, 266, 289, 300, 353, 367, 391]
+	Motif: [TUtu][Gg][Cc][Aa][TUtu][Gg]
+	Number found: 1
+	Position(s) in sequence: [334]
+	Motif: [Gg][Cc][Aa][TUtu][Gg]
+	Number found: 2
+	Position(s) in sequence: [335, 417]
+Gene: MBNL
+	Motif: [CTct][Gg][Cc][CTct]
+	Number found: 2
+	Position(s) in sequence: [308, 359]
+	Motif: [TUtu][Gg][Cc][Aa][TUtu][Gg]
+	Number found: 0
+	Position(s) in sequence: []
+	Motif: [Gg][Cc][Aa][TUtu][Gg]
+	Number found: 0
+	Position(s) in sequence: []
+Gene: ADD3
+	Motif: [CTct][Gg][Cc][CTct]
+	Number found: 6
+	Position(s) in sequence: [37, 49, 117, 169, 196, 428]
+	Motif: [TUtu][Gg][Cc][Aa][TUtu][Gg]
+	Number found: 1
+	Position(s) in sequence: [135]
+	Motif: [Gg][Cc][Aa][TUtu][Gg]
+	Number found: 2
+	Position(s) in sequence: [34, 136]
