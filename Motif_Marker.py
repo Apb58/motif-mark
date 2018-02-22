@@ -49,6 +49,11 @@ class fasta_sequence():
         exon_st = self.seq.find(re.search('[ATCG]+',self.seq)[0])
         exon_ed = (self.seq[exon_st:].find(re.search('[atcg]+',self.seq[exon_st:])[0]))+ exon_st
         return [exon_st, exon_ed]
+    
+    def exon_bounds_rel(self, trimmed_seq):
+        exon_st = trimmed_seq.find(re.search('[ATCG]+',trimmed_seq)[0])
+        exon_ed = (trimmed_seq[exon_st:].find(re.search('[atcg]+',trimmed_seq[exon_st:])[0]))+ exon_st
+        return [exon_st, exon_ed]
 
  
 def iupac_interp(motifs_file):
@@ -130,30 +135,30 @@ def summary_out(results):
                 out.write('\tPosition(s) in sequence: '+str(res[1][key])+'\n')
     
 
-def py_draw(search_results, Motifs):
+def py_draw(search_results, Motifs, window):
     '''Pycairo Graphing: Takes in the motif search results and draws to-scale visual pertaining to the sequence, exons
        and motifs found. Produces an .svg of the graph in the current directory (where script is executed from)'''
     
     no_of_graphs = len(search_results) # Number of graphs to be drawn
     
-    max_size = 0                       # Get the max size among the sequences you have to determine surface width
+    max_size = 0
     for res in search_results:
-        if len(res[0].seq) > max_size:
-            max_size = len(res[0].seq)
+        if len(window_trim(res[0],window)) > max_size:
+            max_size = len(window_trim(res[0],window))  # Get the sequence length you have to determine surface width
     
     # Get Motif color schemes for legend:
     col = 1
     motif_color = {}
     for motif in Motifs:
-        r = 0.2+(col/5)
-        g = 0.8-(col/5)
-        b = 0.2+(col/10)
+        r = 0.1+(col/5)
+        g = 0.9-(col/5)
+        b = 0.5+(col/10)
         motif_color[motif]=[r,g,b]
         col = col+1 
     
     
     # Start Graph drawing
-    surface = cairo.SVGSurface("./exon_graphs.svg", max_size+45, (no_of_graphs*80)+100) # width, height for dimensions
+    surface = cairo.SVGSurface("./exon_graphs.svg", max_size+45, (no_of_graphs*60)+100) # width, height for dimensions
     context = cairo.Context(surface)
     
     for i in range(0,len(search_results)):    # For each sequence with results:
@@ -168,11 +173,11 @@ def py_draw(search_results, Motifs):
         
         # Draw Line to represent Sequence
         context.move_to(35,30*(i+1)+50) # x,y coords; spacing graphs by 30px
-        context.line_to(len(search_results[i][0].seq)+35,30*(i+1)+50) # Drawing line px length of sequence
+        context.line_to(len(window_trim(search_results[i][0],window))+35,30*(i+1)+50) # Drawing line px length of sequence
         context.stroke()
         
         # Draw Rectangle to represent Exon
-        exon_coords = search_results[i][0].exon_bounds()  # Get coordinates for the exon in the sequence
+        exon_coords = search_results[i][0].exon_bounds_rel(window_trim(search_results[i][0],window))  # Get coordinates for the exon in the sequence
         context.rectangle(exon_coords[0]+35,(30*(i+1)+50)-10,exon_coords[1]-exon_coords[0],18)       # x,y top corner, followed by width, height of rec.
         context.fill()
         
@@ -187,19 +192,19 @@ def py_draw(search_results, Motifs):
             col = col+1
     
     # Draw legend
-    context.move_to(10,(no_of_graphs*80))
+    context.move_to(10,(no_of_graphs*50))
     context.set_source_rgb(0, 0, 0)
     context.show_text("Key")
     context.select_font_face("Courier", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
     for i in range(0,len(Motifs)):
         context.set_source_rgb(motif_color[Motifs[i]][0],motif_color[Motifs[i]][1],motif_color[Motifs[i]][2])
-        context.rectangle(10,(no_of_graphs*80)+((i+1)*15),5,10)
+        context.rectangle(10,(no_of_graphs*50)+((i+1)*15),5,10)
         context.fill()
         
-        context.move_to(20,(no_of_graphs*80)+((i+1)*15)+7)
+        context.move_to(20,(no_of_graphs*50)+((i+1)*15)+7)
         context.set_source_rgb(0, 0, 0)
         context.show_text(Motifs[i])
-        context.move_to(10,(no_of_graphs*80)+((i+1)*15))
+        context.move_to(10,(no_of_graphs*50)+((i+1)*15))
         
     surface.finish()
 
@@ -229,7 +234,7 @@ while line:
         to_process.append(line)
         line = Fasta.readline()
     
-    results = Motif_search(fasta_sequence(to_process), 200, Motifs)
+    results = Motif_search(fasta_sequence(to_process), args.w, Motifs)
     
     seq_results.append([fasta_sequence(to_process),results])
 
@@ -243,5 +248,5 @@ if args.s == True:
     
 # Call function to draw motif graphs:
 
-py_draw(seq_results, Motifs)
+py_draw(seq_results, Motifs, args.w)
 
