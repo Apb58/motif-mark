@@ -1,66 +1,66 @@
 ## Summary of Motif Search:
 Gene: DMPK
-	Motif: [CTct][Gg][Cc][CTct]
+	Motif: ygcy
 	Number found: 11
 	Position(s) in sequence: [324, 401, 447, 457, 462, 468, 478, 490, 497, 537, 548]
-	Motif: [TUtu][Gg][Cc][Aa][TUtu][Gg]
+	Motif: UGCAUG
 	Number found: 0
 	Position(s) in sequence: []
-	Motif: [Gg][Cc][Aa][TUtu][Gg]
+	Motif: GCAUG
 	Number found: 0
 	Position(s) in sequence: []
-	Motif: [Cc][TUtu][Gg]
+	Motif: CTG
 	Number found: 13
 	Position(s) in sequence: [17, 24, 60, 326, 400, 426, 449, 536, 547, 550, 559, 574, 581]
 Gene: INSR
-	Motif: [CTct][Gg][Cc][CTct]
+	Motif: ygcy
 	Number found: 13
 	Position(s) in sequence: [63, 80, 150, 271, 312, 316, 339, 350, 403, 417, 441, 504, 528]
-	Motif: [TUtu][Gg][Cc][Aa][TUtu][Gg]
+	Motif: UGCAUG
 	Number found: 1
 	Position(s) in sequence: [384]
-	Motif: [Gg][Cc][Aa][TUtu][Gg]
+	Motif: GCAUG
 	Number found: 2
 	Position(s) in sequence: [385, 467]
-	Motif: [Cc][TUtu][Gg]
+	Motif: CTG
 	Number found: 17
 	Position(s) in sequence: [27, 43, 65, 73, 79, 82, 198, 217, 267, 297, 308, 315, 373, 400, 405, 451, 463]
 Gene: EGFR
-	Motif: [CTct][Gg][Cc][CTct]
+	Motif: ygcy
 	Number found: 9
 	Position(s) in sequence: [90, 127, 274, 362, 459, 502, 537, 589, 607]
-	Motif: [TUtu][Gg][Cc][Aa][TUtu][Gg]
+	Motif: UGCAUG
 	Number found: 0
 	Position(s) in sequence: []
-	Motif: [Gg][Cc][Aa][TUtu][Gg]
+	Motif: GCAUG
 	Number found: 3
 	Position(s) in sequence: [168, 251, 327]
-	Motif: [Cc][TUtu][Gg]
+	Motif: CTG
 	Number found: 22
 	Position(s) in sequence: [19, 40, 165, 182, 217, 241, 292, 310, 352, 361, 364, 440, 458, 473, 517, 536, 539, 542, 549, 569, 588, 609]
 Gene: PTEN
-	Motif: [CTct][Gg][Cc][CTct]
+	Motif: ygcy
 	Number found: 0
 	Position(s) in sequence: []
-	Motif: [TUtu][Gg][Cc][Aa][TUtu][Gg]
+	Motif: UGCAUG
 	Number found: 0
 	Position(s) in sequence: []
-	Motif: [Gg][Cc][Aa][TUtu][Gg]
+	Motif: GCAUG
 	Number found: 0
 	Position(s) in sequence: []
-	Motif: [Cc][TUtu][Gg]
+	Motif: CTG
 	Number found: 10
 	Position(s) in sequence: [11, 37, 125, 152, 227, 365, 373, 388, 524, 530]
 Gene: BRAF
-	Motif: [CTct][Gg][Cc][CTct]
+	Motif: ygcy
 	Number found: 5
 	Position(s) in sequence: [119, 133, 425, 467, 498]
-	Motif: [TUtu][Gg][Cc][Aa][TUtu][Gg]
+	Motif: UGCAUG
 	Number found: 0
 	Position(s) in sequence: []
-	Motif: [Gg][Cc][Aa][TUtu][Gg]
+	Motif: GCAUG
 	Number found: 0
 	Position(s) in sequence: []
-	Motif: [Cc][TUtu][Gg]
+	Motif: CTG
 	Number found: 9
 	Position(s) in sequence: [46, 118, 215, 396, 466, 567, 578, 599, 623]
