@@ -30,6 +30,7 @@ def get_arguments():
     parser.add_argument("-w", help="Intronic flanking sequence window sized (applies to both sides of exonic regions). Default is 200bp. <int>", required=False, type=int, default=200)
     parser.add_argument("-m", help="Motif file to define motif sequences to query for (one Motif per line). Motifs must use *IUPAC* Nucleotide codes. Must include absolute path to file <str>", required=True, type=str)
     parser.add_argument("-s", help="Optional summary output file containing the count of each motif per fasta sequence. File is created in location of imput file if set to 'True' <str>", required=False, type=bool, default=False)
+    parser.add_argument("-title", help="Option Title for the Motif Graph. If not provided, Graph is produced without a title <str>", required=False, type=str, default='')
     #parser.add_argument("-colors", help="Set color palate to use for motif markers (note: whole sequences will always be represented in black). Provide as list of hex codes (#)", required=False, type=str, default='')
     return parser.parse_args()
 
@@ -66,10 +67,12 @@ def iupac_interp(motifs_file):
     
     with open(motifs_file, 'r') as mtfs:
         search_terms = []       # Create a list to store the returned search terms
+        untrans_terms = []      # Keep a list of the untranslated strings for plotting
         line = mtfs.readline()  
         while line:             # For each motif in the file
             st = ''
             mt = str(line).strip('\n')
+            untrans_terms.append(mt)
             for char in mt:             # For each character in the motif
                 if char in iupac.keys():
                     st = st+iupac[char]   # If the character is in the IUPAC dict, add it to the current search term
@@ -79,7 +82,7 @@ def iupac_interp(motifs_file):
             search_terms.append(st)
             line = mtfs.readline()
     
-    return search_terms       # Return the search terms
+    return search_terms, untrans_terms       # Return the search terms
 
 
 def window_trim(fasta, window_size):
@@ -114,8 +117,9 @@ def Motif_search(fasta, window, motifs):
     
     # For each motif, search the sequence for the positions of these motifs, and store the positions:
     motif_positions = {}
-    for mot in motifs:
-        motif_positions[mot]=[x.start(0) for x in re.finditer(mot, w_seq)]
+    for i in range(0,len(motifs[0])):
+        motif_positions[motifs[0][i]]=[x.start(0) for x in re.finditer(motifs[0][i], w_seq)]
+        motif_positions[motifs[0][i]].append(motifs[1][i])
 
     return motif_positions
 
@@ -130,12 +134,12 @@ def summary_out(results):
         for res in results:
             out.write('Gene: '+res[0].gene+'\n')
             for key in res[1].keys():
-                out.write('\tMotif: '+key+'\n')
-                out.write('\tNumber found: '+str(len(res[1][key]))+'\n')
-                out.write('\tPosition(s) in sequence: '+str(res[1][key])+'\n')
+                out.write('\tMotif: '+res[1][key][-1]+'\n')
+                out.write('\tNumber found: '+str(len(res[1][key])-1)+'\n')
+                out.write('\tPosition(s) in sequence: '+str(res[1][key][:-1])+'\n')
     
 
-def py_draw(search_results, Motifs, window):
+def py_draw(search_results, Motifs, window, title):
     '''Pycairo Graphing: Takes in the motif search results and draws to-scale visual pertaining to the sequence, exons
        and motifs found. Produces an .svg of the graph in the current directory (where script is executed from)'''
     
@@ -149,17 +153,23 @@ def py_draw(search_results, Motifs, window):
     # Get Motif color schemes for legend:
     col = 1
     motif_color = {}
-    for motif in Motifs:
-        r = 0.1+(col/5)
-        g = 0.9-(col/5)
-        b = 0.5+(col/10)
+    for motif in Motifs[0]:
+        r = 0.2+(col/5)
+        g = 0.8-(col/5)
+        b = 0.2+(col/10)
         motif_color[motif]=[r,g,b]
         col = col+1 
-    
     
     # Start Graph drawing
     surface = cairo.SVGSurface("./exon_graphs.svg", max_size+45, (no_of_graphs*60)+100) # width, height for dimensions
     context = cairo.Context(surface)
+    
+    # Graph Title, if indicated:
+    if title is not '':
+        context.set_font_size(16)
+        context.move_to(5,35)
+        context.show_text(title)
+        
     
     for i in range(0,len(search_results)):    # For each sequence with results:
         context.set_line_width(1)
@@ -187,8 +197,9 @@ def py_draw(search_results, Motifs, window):
             context.set_source_rgb(motif_color[key][0],motif_color[key][1],motif_color[key][2])
             mot_width = key.count('[')
             for loc in search_results[i][1][key]:
-                context.rectangle(loc+35,(30*(i+1)+50)-10,mot_width,20)
-                context.fill()
+                if type(loc) == int:
+                    context.rectangle(loc+35,(30*(i+1)+50)-10,mot_width,20)
+                    context.fill()
             col = col+1
     
     # Draw legend
@@ -196,14 +207,14 @@ def py_draw(search_results, Motifs, window):
     context.set_source_rgb(0, 0, 0)
     context.show_text("Key")
     context.select_font_face("Courier", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
-    for i in range(0,len(Motifs)):
-        context.set_source_rgb(motif_color[Motifs[i]][0],motif_color[Motifs[i]][1],motif_color[Motifs[i]][2])
+    for i in range(0,len(Motifs[0])):
+        context.set_source_rgb(motif_color[Motifs[0][i]][0],motif_color[Motifs[0][i]][1],motif_color[Motifs[0][i]][2])
         context.rectangle(10,(no_of_graphs*50)+((i+1)*15),5,10)
         context.fill()
         
         context.move_to(20,(no_of_graphs*50)+((i+1)*15)+7)
         context.set_source_rgb(0, 0, 0)
-        context.show_text(Motifs[i])
+        context.show_text(search_results[0][1][Motifs[0][i]][-1])
         context.move_to(10,(no_of_graphs*50)+((i+1)*15))
         
     surface.finish()
@@ -219,9 +230,7 @@ args = get_arguments()
 Fasta = open(args.f,'r')
 window = args.w
 Motifs = iupac_interp(args.m)
-
-#Motifs = iupac_interp('/Users/Adrian/BGMP/Motif_marker/test/motifs.txt')
-#Fasta = open('/Users/Adrian/BGMP/Motif_marker/test/fasta_t1.fa','r')
+title = args.title
 
 line = Fasta.readline()
 seq_results = []
@@ -248,5 +257,5 @@ if args.s == True:
     
 # Call function to draw motif graphs:
 
-py_draw(seq_results, Motifs, args.w)
+py_draw(seq_results, Motifs, args.w, args.title)
 
