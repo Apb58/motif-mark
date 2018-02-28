@@ -1,4 +1,4 @@
-#!/Users/Adrian/miniconda3/bin/python3
+#!/usr/bin/python3
 
 ## Motif Marker:
 ## Adrian Bubie
