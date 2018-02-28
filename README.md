@@ -1,10 +1,11 @@
 ## Motif_Marker v1.1
-Adrian Bubie
-University of Oregon
+
+by Adrian Bubie
+
 
 **Motif Marker** is a python script used to identify short repeat/sequence motifs around intron-exon boundaries of given DNA sequences. Motifs are user defined, and translated into regular expression search terms using the IUPAC nomenclature standard. Motif locations returned by regex search are used to mark sub-sequence locations a 1-to-1 pixel to basepair graph of the intron-exon sequence. 
 
-![Example Graph]('./exon_graphs.svg')
+![Example Graph](exon_graphs.svg)
 
 Note that Motif Marker recognizes exon sequences as using capitalized characters (ATCG) and intron sequences using lowercase (atcg), as per UCSC Genome Browser sequence download format.
 
