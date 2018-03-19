@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 
 ## Motif Marker:
 ## Adrian Bubie
@@ -31,7 +31,7 @@ def get_arguments():
     parser.add_argument("-m", help="Motif file to define motif sequences to query for (one Motif per line). Motifs must use *IUPAC* Nucleotide codes. Must include absolute path to file <str>", required=True, type=str)
     parser.add_argument("-s", help="Optional summary output file containing the count of each motif per fasta sequence. File is created in location of imput file if set to 'True' <str>", required=False, type=bool, default=False)
     parser.add_argument("-title", help="Option Title for the Motif Graph. If not provided, Graph is produced without a title <str>", required=False, type=str, default='')
-    #parser.add_argument("-colors", help="Set color palate to use for motif markers (note: whole sequences will always be represented in black). Provide as list of hex codes (#)", required=False, type=str, default='')
+    parser.add_argument("-colors", help="Set color palate to mark motifs in graph (note: whole sequences will always be represented in black). Provide as space separated list of hex codes WITHOUT hashes (#) equal to the number of motifs searched. If not specified, default palate used", required=False, nargs='+', type=str, default='')
     return parser.parse_args()
 
 
@@ -139,7 +139,7 @@ def summary_out(results):
                 out.write('\tPosition(s) in sequence: '+str(res[1][key][:-1])+'\n')
     
 
-def py_draw(search_results, Motifs, window, title):
+def py_draw(search_results, Motifs, window, title, color_scheme):
     '''Pycairo Graphing: Takes in the motif search results and draws to-scale visual pertaining to the sequence, exons
        and motifs found. Produces an .svg of the graph in the current directory (where script is executed from)'''
     
@@ -151,14 +151,23 @@ def py_draw(search_results, Motifs, window, title):
             max_size = len(window_trim(res[0],window))  # Get the sequence length you have to determine surface width
     
     # Get Motif color schemes for legend:
-    col = 1
     motif_color = {}
-    for motif in Motifs[0]:
-        r = 0.2+(col/5)
-        g = 0.8-(col/5)
-        b = 0.2+(col/10)
-        motif_color[motif]=[r,g,b]
-        col = col+1 
+    if color_scheme != '':
+        for j in range(0,len(Motifs[0])):
+            color_pal = color_scheme[j]
+            r = int(color_pal[0:2],16)/256
+            g = int(color_pal[2:4],16)/256
+            b = int(color_pal[4:],16)/256
+            motif_color[Motifs[0][j]]=[r,g,b]
+        
+    if color_scheme == '':
+        col = 1
+        for motif in Motifs[0]:
+            r = 0.2+(col/5)
+            g = 0.8-(col/5)
+            b = 0.2+(col/10)
+            motif_color[motif]=[r,g,b]
+            col = col+1 
     
     # Start Graph drawing
     surface = cairo.SVGSurface("./exon_graphs.svg", max_size+45, (no_of_graphs*60)+100) # width, height for dimensions
@@ -231,6 +240,7 @@ Fasta = open(args.f,'r')
 window = args.w
 Motifs = iupac_interp(args.m)
 title = args.title
+ColScheme = args.colors
 
 line = Fasta.readline()
 seq_results = []
@@ -257,5 +267,5 @@ if args.s == True:
     
 # Call function to draw motif graphs:
 
-py_draw(seq_results, Motifs, args.w, args.title)
+py_draw(seq_results, Motifs, args.w, args.title, ColScheme)
 
