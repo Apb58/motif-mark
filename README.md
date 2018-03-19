@@ -27,7 +27,7 @@ for instructions on how to run and pass in the required files.
 An example execution using the optional arguments is given below:
 
 ```
-./Motif_Marker.py -f test/fasta_t2.fa -m test/motifs.txt -s True -w 250 -title 'MotifSearch in Key Genes' -colors #FF0000,#00FF00,#0000FF,#FFD700
+./Motif_Marker.py -f test/fasta_t2.fa -m test/motifs.txt -s True -w 250 -title 'MotifSearch in Key Genes' -colors FF0000 00FF00 0000FF FFD700
 ```
 
 (Current version: v1.2)
