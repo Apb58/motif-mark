@@ -1,4 +1,4 @@
-#!/usr/local/bin/env python3
+#!/usr/local/bin/python3.4
 
 ## Motif Marker:
 ## Adrian Bubie
@@ -47,13 +47,13 @@ class fasta_sequence():
         return int(len(self.seq))
     
     def exon_bounds(self):
-        exon_st = self.seq.find(re.search('[ATCG]+',self.seq)[0])
-        exon_ed = (self.seq[exon_st:].find(re.search('[atcg]+',self.seq[exon_st:])[0]))+ exon_st
+        exon_st = self.seq.find(re.search('[ATCG]+',self.seq).group(0))
+        exon_ed = (self.seq[exon_st:].find(re.search('[atcg]+',self.seq[exon_st:]).group(0)))+ exon_st
         return [exon_st, exon_ed]
     
     def exon_bounds_rel(self, trimmed_seq):
-        exon_st = trimmed_seq.find(re.search('[ATCG]+',trimmed_seq)[0])
-        exon_ed = (trimmed_seq[exon_st:].find(re.search('[atcg]+',trimmed_seq[exon_st:])[0]))+ exon_st
+        exon_st = trimmed_seq.find(re.search('[ATCG]+',trimmed_seq).group(0))
+        exon_ed = (trimmed_seq[exon_st:].find(re.search('[atcg]+',trimmed_seq[exon_st:]).group(0)))+ exon_st
         return [exon_st, exon_ed]
 
  
