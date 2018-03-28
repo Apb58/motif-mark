@@ -13,7 +13,7 @@ Motif Marker can currently handle any number of intron-exon sequences, in FASTA 
 
 ### Downloads and Requirements
 
-This program requires python v3.4+ and the python cario drawing package. 
+This program requires python v3.6+ and the python cario drawing package (for python3.4/3.5, please use the 3.4.py script version). 
 The pycario package download can be found [here](https://pycairo.readthedocs.io/en/latest/). 
 
 To run the script, download the `Motif_Marker.py` executable. Modify the path in the shebang (first line) to point to your python3 install directory.  From the command line, execute the program using:
