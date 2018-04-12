@@ -1,14 +1,15 @@
-#!/usr/local/bin/env python3
+#!/Users/Adrian/miniconda3/bin/python
 
-## Motif Marker:
+## Motif Marker v1.3:
 ## Adrian Bubie
-## 2/11/18
+## 4/10/18
 ## --------------------
 ## This program detects motifs (selected sequences) of interest from sequences provided in a fasta format. 
 ## As the intended use case is to identify motifs around exon boundries that are potential regulators for splicing events, 
 ## this program maps detected motifs onto a representation of the intron/exons sequences provided in the input file, and
 ## exports these maps as an SVG graphic.
 
+import sys
 import textwrap
 import random
 import re
@@ -47,14 +48,26 @@ class fasta_sequence():
         return int(len(self.seq))
     
     def exon_bounds(self):
-        exon_st = self.seq.find(re.search('[ATCG]+',self.seq)[0])
-        exon_ed = (self.seq[exon_st:].find(re.search('[atcg]+',self.seq[exon_st:])[0]))+ exon_st
-        return [exon_st, exon_ed]
+        if sys.version_info[1] > 5:
+            exon_st = self.seq.find(re.search('[ATCG]+',self.seq)[0])
+            exon_ed = (self.seq[exon_st:].find(re.search('[atcg]+',self.seq[exon_st:])[0]))+ exon_st
+            return [exon_st, exon_ed]
+
+        elif sys.version_info[1] < 6:
+            exon_st = self.seq.find(re.search('[ATCG]+',self.seq).group(0))
+            exon_ed = (self.seq[exon_st:].find(re.search('[atcg]+',self.seq[exon_st:]).group(0)))+ exon_st
+            return [exon_st, exon_ed]
     
     def exon_bounds_rel(self, trimmed_seq):
-        exon_st = trimmed_seq.find(re.search('[ATCG]+',trimmed_seq)[0])
-        exon_ed = (trimmed_seq[exon_st:].find(re.search('[atcg]+',trimmed_seq[exon_st:])[0]))+ exon_st
-        return [exon_st, exon_ed]
+        if sys.version_info[1] > 5: 
+            exon_st = trimmed_seq.find(re.search('[ATCG]+',trimmed_seq)[0])
+            exon_ed = (trimmed_seq[exon_st:].find(re.search('[atcg]+',trimmed_seq[exon_st:])[0]))+ exon_st
+            return [exon_st, exon_ed]
+
+        elif sys.version_info[1] < 6:
+            exon_st = self.seq.find(re.search('[ATCG]+',self.seq).group(0))
+            exon_ed = (self.seq[exon_st:].find(re.search('[atcg]+',self.seq[exon_st:]).group(0)))+ exon_st
+            return [exon_st, exon_ed]
 
  
 def iupac_interp(motifs_file):
