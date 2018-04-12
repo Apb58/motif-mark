@@ -1,4 +1,4 @@
-#!/usr/local/bin/env python3
+#!/Users/Adrian/miniconda3/bin/python
 
 ## Motif Marker v1.3:
 ## Adrian Bubie
@@ -53,7 +53,7 @@ class fasta_sequence():
             exon_ed = (self.seq[exon_st:].find(re.search('[atcg]+',self.seq[exon_st:])[0]))+ exon_st
             return [exon_st, exon_ed]
 
-        elif sys.version_info[1] < 6:i
+        elif sys.version_info[1] < 6:
             exon_st = self.seq.find(re.search('[ATCG]+',self.seq).group(0))
             exon_ed = (self.seq[exon_st:].find(re.search('[atcg]+',self.seq[exon_st:]).group(0)))+ exon_st
             return [exon_st, exon_ed]
